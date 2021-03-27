@@ -9,9 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QTextEdit
-from PyQt5.QtCore import QDir
-
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+from classes import graph, signal
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -63,9 +63,15 @@ class Ui_MainWindow(object):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         
-        self.spectrogram = QtWidgets.QWidget(self.widget)
+        self.spectrogram = pg.PlotWidget()
+        self.spectrogram.setBackground('w')
         self.spectrogram.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.spectrogram.setObjectName("spectrogram")
+        styles = {'color':'b', 'font-size':'10px'}
+        self.spectrogram.setLabel('left', 'frequency (Hz)', **styles)
+        self.spectrogram.setLabel('bottom', 'time (sec)', **styles)
+        self.spectrogram.showGrid(x=True, y=True)
+        self.spectrogram.setXRange(0, 0.7)
         
         self.horizontalLayout_2.addWidget(self.spectrogram)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
@@ -76,11 +82,9 @@ class Ui_MainWindow(object):
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem3)
         
-        self.channel_1 = QtWidgets.QWidget(self.widget)
-        self.channel_1.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.channel_1.setObjectName("channel_1")
+        graph.createPlotWidget()
         
-        self.horizontalLayout_3.addWidget(self.channel_1)
+        self.horizontalLayout_3.addWidget(graph.getLastChannel())
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
@@ -88,12 +92,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem5)
+
+        graph.createPlotWidget()
         
-        self.channel_2 = QtWidgets.QWidget(self.widget)
-        self.channel_2.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.channel_2.setObjectName("channel_2")
-        
-        self.horizontalLayout_4.addWidget(self.channel_2)
+        self.horizontalLayout_4.addWidget(graph.getLastChannel())
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem6)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
@@ -102,11 +104,9 @@ class Ui_MainWindow(object):
         spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem7)
         
-        self.channel_3 = QtWidgets.QWidget(self.widget)
-        self.channel_3.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.channel_3.setObjectName("channel_3")
+        graph.createPlotWidget()
         
-        self.horizontalLayout_5.addWidget(self.channel_3)
+        self.horizontalLayout_5.addWidget(graph.getLastChannel())
         spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem8)
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
         self.zoomOut.setObjectName("zoomOut")
         
         self.horizontalLayout.addWidget(self.zoomOut)
-        
+                
         self.channelSelector = QtWidgets.QSpinBox(self.widget)
         self.channelSelector.setObjectName("channelSelector")
         
@@ -144,8 +144,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         
         self.open = QtWidgets.QAction(MainWindow)
-        self.open.setObjectName("open")
-        self.open.triggered.connect(self.get_signal_file)
+        self.open.setObjectName("open")        
         
         self.save = QtWidgets.QAction(MainWindow)
         self.save.setObjectName("save")
@@ -169,21 +168,4 @@ class Ui_MainWindow(object):
         self.menufile.setTitle(_translate("MainWindow", "file"))
         self.open.setText(_translate("MainWindow", "open"))
         self.save.setText(_translate("MainWindow", "save"))
-        
-    def get_signal_file(self):
-        dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.AnyFile)
-        dialog.setFilter(Qdir.Files)
-        
-        if dialog.exec_():
-            file_name = dialog.selectedFiles()
-            
-            if file_name[0].endswith('.txt'):
-                with open(file_name[0], 'r') as f:
-                    data = f.read()
-                    self.plotSignal(data)
-                    f.close()
-            else:
-                pass
-        
         

@@ -11,12 +11,21 @@
 
 
 # libraries needed for main python file
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit
 from PyQt5.QtCore import QDir
 import sys
 from ui import Ui_MainWindow
 import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+import os
+import pathlib
+from matplotlib.backends.backend_pdf import PdfPages
+from classes import signal, graph
 
 
 
@@ -26,6 +35,59 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         super(ApplicationWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.open.triggered.connect(self.open)
+        self.ui.clearButton.clicked.connect(self.clearChannels)
+        self.ui.startButton.clicked.connect(self.startChannels)
+        self.ui.stopButton.clicked.connect(self.stopChannels) 
+        self.ui.save.triggered.connect(self.saveAs)
+        signal.timer.timeout.connect(self.moveSignals)    
+        self.signals = []
+    
+    def open(self):
+        files_name = QtGui.QFileDialog.getOpenFileName( self, 'Open only txt or CSV or xls', os.getenv('HOME') ,"csv(*.csv);; text(*.txt) ;; xls(*.xls)" )
+        path = files_name[0]
+
+        if pathlib.Path(path).suffix == ".txt" :
+            data = np.genfromtxt(path, delimiter = ',')
+            x= data[: , 0]
+            y =data[: , 1] 
+            x= list(x[:])
+            y= list(y[:])
+            self.signals.append(signal(x, y))
+        elif pathlib.Path(path).suffix == ".csv" :
+            data = np.genfromtxt(path, delimiter = ' ')
+            x= data[: , 0]
+            y =data[: , 1] 
+            x= list(x[:])
+            y= list(y[:])
+            self.signals.append(signal(x, y))
+        elif pathlib.Path(path).suffix == ".xls" :
+            data = np.genfromtxt(path, delimiter = ',')
+            x= data[: , 0]
+            y =data[: , 1] 
+            x= list(x[:])
+            y= list(y[:])
+            self.signals.append(signal(x, y))
+
+    def moveSignals(self):
+        for signal in self.signals:
+            signal.moveGraph()
+        
+    def clearChannels(self):
+        while len(self.signals):
+            self.signals.pop()
+            
+    def startChannels(self):
+        signal.timer.start()
+        
+    def stopChannels(self):
+        signal.timer.stop()
+
+    def saveAs(self):
+        report = PdfPages('report.pdf')
+        for signal in self.signals:
+            report.savefig(signal.getFigure())
+        report.close()
 
 # function for launching a QApplication and running the ui and main window
 def window():
