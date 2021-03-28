@@ -12,20 +12,14 @@
 
 # libraries needed for main python file
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit
-from PyQt5.QtCore import QDir
+from PyQt5.QtWidgets import QApplication, QMainWindow
 import sys
 from ui import Ui_MainWindow
-import matplotlib
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
 import os
 import pathlib
 from matplotlib.backends.backend_pdf import PdfPages
-from classes import signal, graph
+from classes import signal
 
 
 # class definition for application window components like the ui

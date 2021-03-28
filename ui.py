@@ -7,9 +7,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QKeySequence
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
-from classes import graph, signal
+from classes import graph
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

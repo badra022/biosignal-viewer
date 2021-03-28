@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from pyqtgraph import PlotWidget, plot
+from PyQt5 import QtCore
+from pyqtgraph import PlotWidget
 import pyqtgraph as pg
 import matplotlib.pyplot as plt
 
