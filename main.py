@@ -14,7 +14,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow
 import sys
-from new_ui import Ui_MainWindow
+from gui import Ui_MainWindow
 import numpy as np
 import os
 import pathlib
@@ -77,7 +77,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def moveSignals(self):
         for signal in self.signals:
-            signal.moveGraph()
+            signal.moveGraph(self.ui.speedSelector.value())
         
     def clearChannels(self):
         while len(self.signals):

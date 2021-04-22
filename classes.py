@@ -107,10 +107,15 @@ class signal(object):
         self.pen = pg.mkPen(color=self.__class__.penColors[self.channelIdx])
         graph.channels[self.channelIdx].plot(self.time, self.amplitude, pen=self.pen)
 
-    def moveGraph(self):
-        self.startTimeIdx = (self.startTimeIdx + 1) % (len(self.time) - 100)
-        self.endTimeIdx = self.endTimeIdx + 1 % len(self.time)
-        graph.channels[self.channelIdx].setXRange(self.time[self.startTimeIdx], self.time[self.endTimeIdx])
+    def moveGraph(self, speed):
+        try:
+            self.startTimeIdx = self.startTimeIdx + speed
+            self.endTimeIdx = self.endTimeIdx + speed
+            graph.channels[self.channelIdx].setXRange(self.time[self.startTimeIdx], self.time[self.endTimeIdx])
+        except:
+            self.startTimeIdx = 0
+            self.endTimeIdx = 100 * self.zoomFactor
+            graph.channels[self.channelIdx].setXRange(self.time[self.startTimeIdx], self.time[self.endTimeIdx])
 
     def zoomIn(self):
         if self.zoomFactor >= 0.2:
