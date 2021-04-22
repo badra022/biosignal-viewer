@@ -1,0 +1,3 @@
+pip install pyqt5
+pip install numby
+pip install matplotlib
