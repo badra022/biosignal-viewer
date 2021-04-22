@@ -14,7 +14,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow
 import sys
-from ui import Ui_MainWindow
+from new_ui import Ui_MainWindow
 import numpy as np
 import os
 import pathlib
