@@ -17,7 +17,7 @@ $ cd biosignal-viewer
 ```
 3. **_install project dependencies_**
 ```sh
-pip install dependencies.txt
+pip install -r dependencies.txt
 ```
 4. **_Run the application_**
 ```sh
